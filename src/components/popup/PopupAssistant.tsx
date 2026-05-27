@@ -4,6 +4,7 @@ import { usePopupStore, useSettingsStore } from '../../stores/appStore';
 import { ActionGrid } from './ActionGrid.tsx';
 import { ResponseView } from './ResponseView.tsx';
 import { ContextBar } from './ContextBar.tsx';
+import logo from '../../assets/logo.png';
 import type { AIAction } from '../../types';
 import { sendAIRequestStreaming, onStreamChunk } from '../../services/tauriService';
 import './PopupAssistant.css';
@@ -131,7 +132,7 @@ export function PopupAssistant() {
           >
             <div className="popup-header-left">
               <div className="popup-logo">
-                <span className="popup-logo-icon">👻</span>
+                <img src={logo} alt="GhostLens Logo" className="popup-logo-img" />
                 <span className="popup-logo-text gradient-text">GhostLens</span>
               </div>
             </div>
