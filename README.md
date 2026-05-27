@@ -1,12 +1,21 @@
-# 👻 GhostLens — AI Screen Context Assistant
+<p align="center">
+  <img src="./src/assets/logo.png" alt="GhostLens Logo" width="128" height="128" style="border-radius: 24px; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);" />
+</p>
 
-[![Tauri v2](https://img.shields.io/badge/Tauri-v2.0-blue?logo=tauri)](https://tauri.app)
-[![React](https://img.shields.io/badge/React-v19-blue?logo=react)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-v5-blue?logo=typescript)](https://www.typescriptlang.org)
-[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red)](/LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-macOS-lightgrey?logo=apple)](https://apple.com)
+<h1 align="center">👻 GhostLens</h1>
+<p align="center"><b>AI Screen Context Assistant</b></p>
 
-A desktop AI assistant built with **Tauri 2, React, TypeScript, and Rust**. GhostLens understands your on-screen context, monitors your clipboard, and processes region-specific screenshots using Apple's native **Vision Framework** sidecar to provide instant, multimodal AI intelligence—all packaged into a premium glassmorphic interface.
+<p align="center">
+  <a href="https://tauri.app"><img src="https://img.shields.io/badge/Tauri-v2.0-blue?logo=tauri" alt="Tauri v2" /></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-v19-blue?logo=react" alt="React" /></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-v5-blue?logo=typescript" alt="TypeScript" /></a>
+  <a href="/LICENSE"><img src="https://img.shields.io/badge/License-Proprietary-red" alt="License: Proprietary" /></a>
+  <a href="https://apple.com"><img src="https://img.shields.io/badge/Platform-macOS-lightgrey?logo=apple" alt="Platform" /></a>
+</p>
+
+<p align="center">
+  A desktop AI assistant built with <b>Tauri 2, React, TypeScript, and Rust</b>. GhostLens understands your on-screen context, monitors your clipboard, and processes region-specific screenshots using Apple's native <b>Vision Framework</b> sidecar to provide instant, multimodal AI intelligence—all packaged into a premium glassmorphic interface.
+</p>
 
 ---
 
