@@ -70,9 +70,22 @@ function App() {
         }
       });
 
-      unlistenGesture = await onGestureTrigger((gesture) => {
-        if (gesture === 'triple-ctrl' || gesture === 'mouse-wiggle') {
-          showPopup('', { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+      unlistenGesture = await onGestureTrigger(async (gesture) => {
+        if (gesture === 'triple-ctrl' || gesture === 'mouse-wiggle' || gesture === 'triple-click') {
+          const centerPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+          try {
+            const clipboard = await getClipboardContent();
+            if (clipboard.content) {
+              showPopup(clipboard.content, centerPos);
+              setCapturedImage(null);
+            } else {
+              showPopup('', centerPos);
+              setCapturedImage(null);
+            }
+          } catch {
+            showPopup('', centerPos);
+            setCapturedImage(null);
+          }
         }
       });
     };

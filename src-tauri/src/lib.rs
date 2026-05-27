@@ -67,6 +67,12 @@ pub fn run() {
                 services::clipboard_watcher::start_clipboard_watcher(handle);
             });
 
+            // Start gesture watcher
+            let handle_g = app_handle.clone();
+            std::thread::spawn(move || {
+                services::gesture::start_gesture_watcher(handle_g);
+            });
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
