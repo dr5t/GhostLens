@@ -1,50 +1,123 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { useEffect } from 'react';
+import { PopupAssistant } from './components/popup/PopupAssistant';
+import { SettingsPanel } from './components/settings/SettingsPanel';
+import { usePopupStore, useSettingsStore } from './stores/appStore';
+import { onShortcutTrigger, onGestureTrigger, getSettings } from './services/tauriService';
+import './App.css';
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const { showPopup, isVisible } = usePopupStore();
+  const { setSettings, openSettings, isSettingsOpen } = useSettingsStore();
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  // Load settings on startup
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const settings = await getSettings();
+        setSettings(settings);
+      } catch {
+        // Use defaults on first run
+        console.log('Using default settings');
+      }
+    };
+    loadSettings();
+  }, [setSettings]);
+
+  // Listen for shortcut & gesture triggers from Rust backend
+  useEffect(() => {
+    let unlistenShortcut: (() => void) | null = null;
+    let unlistenGesture: (() => void) | null = null;
+
+    const setup = async () => {
+      unlistenShortcut = await onShortcutTrigger((shortcut) => {
+        switch (shortcut) {
+          case 'open-popup':
+            showPopup('', { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+            break;
+          case 'open-settings':
+            openSettings();
+            break;
+        }
+      });
+
+      unlistenGesture = await onGestureTrigger((gesture) => {
+        if (gesture === 'triple-ctrl' || gesture === 'mouse-wiggle') {
+          showPopup('', { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+        }
+      });
+    };
+
+    setup();
+    return () => {
+      if (unlistenShortcut) unlistenShortcut();
+      if (unlistenGesture) unlistenGesture();
+    };
+  }, [showPopup, openSettings]);
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app-root">
+      {/* Background with ambient gradient */}
+      <div className="app-background">
+        <div className="ambient-orb orb-1" />
+        <div className="ambient-orb orb-2" />
+        <div className="ambient-orb orb-3" />
       </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
 
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+      {/* Home Screen */}
+      {!isVisible && !isSettingsOpen && (
+        <div className="home-screen">
+          <div className="home-content">
+            <div className="home-logo">
+              <span className="home-logo-ghost">👻</span>
+              <h1 className="home-title gradient-text">GhostLens</h1>
+              <p className="home-subtitle">AI Screen Context Assistant</p>
+            </div>
+
+            <div className="home-shortcuts">
+              <div className="shortcut-item">
+                <kbd>⌘⇧G</kbd>
+                <span>Open Assistant</span>
+              </div>
+              <div className="shortcut-item">
+                <kbd>⌘⇧S</kbd>
+                <span>Screenshot & Analyze</span>
+              </div>
+              <div className="shortcut-item">
+                <kbd>⌘⇧C</kbd>
+                <span>Analyze Clipboard</span>
+              </div>
+              <div className="shortcut-item">
+                <kbd>Triple Ctrl</kbd>
+                <span>Quick Trigger</span>
+              </div>
+            </div>
+
+            <div className="home-actions">
+              <button
+                className="home-btn primary"
+                onClick={() => showPopup('Hello! I am GhostLens, your AI screen assistant. Select some text on screen or take a screenshot to get started.')}
+              >
+                <span>✨</span> Try It Now
+              </button>
+              <button className="home-btn secondary" onClick={openSettings}>
+                <span>⚙️</span> Settings
+              </button>
+            </div>
+
+            <div className="home-status">
+              <div className="status-dot active" />
+              <span>Ready — Listening for shortcuts</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Popup */}
+      <PopupAssistant />
+
+      {/* Settings Panel */}
+      <SettingsPanel />
+    </div>
   );
 }
 
