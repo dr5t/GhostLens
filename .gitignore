@@ -7,12 +7,13 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node dependencies
 node_modules
-dist
-dist-ssr
+/dist
+/dist-ssr
 *.local
 
-# Editor directories and files
+# Editor / OS directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,3 +23,30 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+Thumbs.db
+
+# Rust/Cargo
+/src-tauri/target/
+/src-tauri/gen/schemas
+
+# Swift / Xcode build artifacts
+/sidecar/.build/
+/sidecar/Packages
+/sidecar/.swiftpm/
+/sidecar/build/
+*.xcodeproj
+*.xcworkspace
+
+# Databases & local user files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+/src-tauri/ghostlens.db
+.env
+.env.*
+!.env.example
+
+# Tauri local logs and output
+/src-tauri/CapFile
+/src-tauri/capabilities/schemas
