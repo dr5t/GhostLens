@@ -1,12 +1,20 @@
 import { useEffect } from 'react';
 import { PopupAssistant } from './components/popup/PopupAssistant';
 import { SettingsPanel } from './components/settings/SettingsPanel';
-import { usePopupStore, useSettingsStore } from './stores/appStore';
-import { onShortcutTrigger, onGestureTrigger, getSettings } from './services/tauriService';
+import { usePopupStore, useSettingsStore, useClipboardStore } from './stores/appStore';
+import {
+  onShortcutTrigger,
+  onGestureTrigger,
+  getSettings,
+  captureInteractive,
+  performOCR,
+  getClipboardContent,
+  onClipboardChange,
+} from './services/tauriService';
 import './App.css';
 
 function App() {
-  const { showPopup, isVisible } = usePopupStore();
+  const { showPopup, isVisible, setCapturedImage } = usePopupStore();
   const { setSettings, openSettings, isSettingsOpen } = useSettingsStore();
 
   // Load settings on startup
@@ -29,13 +37,34 @@ function App() {
     let unlistenGesture: (() => void) | null = null;
 
     const setup = async () => {
-      unlistenShortcut = await onShortcutTrigger((shortcut) => {
+      unlistenShortcut = await onShortcutTrigger(async (shortcut) => {
+        const centerPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         switch (shortcut) {
           case 'open-popup':
-            showPopup('', { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+            showPopup('', centerPos);
             break;
           case 'open-settings':
             openSettings();
+            break;
+          case 'screenshot-analyze':
+            try {
+              const imagePath = await captureInteractive();
+              const ocrResult = await performOCR(imagePath);
+              showPopup(ocrResult.text, centerPos);
+              setCapturedImage(imagePath);
+            } catch (err) {
+              console.error('Screenshot capture or OCR failed:', err);
+            }
+            break;
+          case 'analyze-clipboard':
+            try {
+              const clipboard = await getClipboardContent();
+              if (clipboard.content) {
+                showPopup(clipboard.content, centerPos);
+              }
+            } catch (err) {
+              console.error('Failed to read clipboard:', err);
+            }
             break;
         }
       });
@@ -53,6 +82,31 @@ function App() {
       if (unlistenGesture) unlistenGesture();
     };
   }, [showPopup, openSettings]);
+
+  // Listen for clipboard changes
+  useEffect(() => {
+    let unlistenClipboard: (() => void) | null = null;
+
+    const setupClipboard = async () => {
+      unlistenClipboard = await onClipboardChange((data) => {
+        const { setCurrentContent, addToHistory } = useClipboardStore.getState();
+        
+        setCurrentContent(data.content, data.contentType);
+        
+        addToHistory({
+          id: crypto.randomUUID(),
+          content: data.content,
+          contentType: data.contentType as any,
+          timestamp: Date.now(),
+        });
+      });
+    };
+
+    setupClipboard();
+    return () => {
+      if (unlistenClipboard) unlistenClipboard();
+    };
+  }, []);
 
   return (
     <div className="app-root">

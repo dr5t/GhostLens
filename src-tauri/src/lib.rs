@@ -78,6 +78,7 @@ pub fn run() {
             commands::ocr::perform_ocr,
             commands::screen_capture::capture_full_screen,
             commands::screen_capture::capture_region,
+            commands::screen_capture::capture_interactive,
             commands::clipboard::get_clipboard_content,
             commands::utils::read_file_base64,
         ])

@@ -11,6 +11,10 @@ export async function captureRegion(region: CaptureRegion): Promise<string> {
   return invoke<string>('capture_region', { region });
 }
 
+export async function captureInteractive(): Promise<string> {
+  return invoke<string>('capture_interactive');
+}
+
 // === OCR Service ===
 export async function performOCR(imagePath: string): Promise<OCRResult> {
   return invoke<OCRResult>('perform_ocr', { imagePath });

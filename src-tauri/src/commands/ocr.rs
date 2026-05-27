@@ -37,8 +37,30 @@ async fn run_ocr_sidecar(
     }
 
     let stdout = String::from_utf8_lossy(&output.stdout);
-    let result: OCRResult =
+    let mut result: OCRResult =
         serde_json::from_str(&stdout).map_err(|e| format!("Failed to parse OCR output: {}", e))?;
 
+    if result.code_language.is_none() {
+        result.code_language = detect_code_language(&result.text);
+    }
+
     Ok(result)
+}
+
+fn detect_code_language(text: &str) -> Option<String> {
+    if text.contains("fn ") || text.contains("pub fn ") || text.contains("impl ") {
+        Some("rust".to_string())
+    } else if text.contains("def ") || (text.contains("import ") && text.contains(":")) {
+        Some("python".to_string())
+    } else if text.contains("#include <") {
+        Some("cpp".to_string())
+    } else if text.contains("import React") || text.contains("export default") || text.contains("interface ") {
+        Some("typescript".to_string())
+    } else if text.contains("const ") || text.contains("let ") || text.contains("function ") || text.contains("console.log") {
+        Some("javascript".to_string())
+    } else if text.contains("public class ") || text.contains("System.out.println") {
+        Some("java".to_string())
+    } else {
+        None
+    }
 }

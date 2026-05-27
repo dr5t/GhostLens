@@ -49,3 +49,28 @@ pub async fn capture_region(region: CaptureRegion) -> Result<String, String> {
 
     Ok(filepath.to_string_lossy().to_string())
 }
+
+#[tauri::command]
+pub async fn capture_interactive() -> Result<String, String> {
+    let temp_dir = std::env::temp_dir();
+    let filename = format!("ghostlens_interactive_{}.png", chrono::Utc::now().timestamp_millis());
+    let filepath = temp_dir.join(&filename);
+
+    // Use macOS screencapture CLI tool interactively
+    // -i: interactive mode
+    // -x: do not play sounds
+    let output = Command::new("screencapture")
+        .args(["-i", "-x", filepath.to_str().unwrap()])
+        .output()
+        .map_err(|e| format!("Interactive capture failed: {}", e))?;
+
+    if !output.status.success() {
+        return Err("Capture cancelled".to_string());
+    }
+
+    if !filepath.exists() {
+        return Err("Capture cancelled".to_string());
+    }
+
+    Ok(filepath.to_string_lossy().to_string())
+}
