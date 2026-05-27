@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSettingsStore } from '../../stores/appStore';
 import { saveSettings, validateApiKey } from '../../services/tauriService';
-import type { AIProvider } from '../../types';
+import type { AIProvider, AIProviderConfig } from '../../types';
 import './SettingsPanel.css';
 
 type SettingsTab = 'providers' | 'shortcuts' | 'appearance' | 'general';
@@ -65,7 +65,7 @@ export function SettingsPanel() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e: React.MouseEvent) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="settings-header">
@@ -97,7 +97,7 @@ export function SettingsPanel() {
                   Configure your AI providers. Add API keys to enable each provider.
                 </p>
 
-                {settings.providers.map((providerConfig) => {
+                {settings.providers.map((providerConfig: AIProviderConfig) => {
                   const info = PROVIDER_INFO[providerConfig.provider];
                   return (
                     <div key={providerConfig.provider} className="provider-card glass">
@@ -203,7 +203,7 @@ export function SettingsPanel() {
                 <p className="settings-section-desc">
                   Customize keyboard shortcuts for quick access.
                 </p>
-                {Object.entries(settings.shortcuts).map(([key, value]) => (
+                {(Object.entries(settings.shortcuts) as [string, string][]).map(([key, value]) => (
                   <div key={key} className="shortcut-row">
                     <span className="shortcut-label">
                       {key.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())}

@@ -8,7 +8,26 @@ use tauri::Manager;
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().with_handler(|app_handle, _manager, shortcut| {
+            use tauri::Emitter;
+            use tauri_plugin_global_shortcut::Shortcut;
+            
+            let g = "CommandOrControl+Shift+G".parse::<Shortcut>().unwrap();
+            let s = "CommandOrControl+Shift+S".parse::<Shortcut>().unwrap();
+            let c = "CommandOrControl+Shift+C".parse::<Shortcut>().unwrap();
+            let p = "CommandOrControl+Shift+P".parse::<Shortcut>().unwrap();
+
+            let triggered = shortcut.id;
+            if triggered == g.id() {
+                app_handle.emit("shortcut-triggered", "open-popup").ok();
+            } else if triggered == s.id() {
+                app_handle.emit("shortcut-triggered", "screenshot-analyze").ok();
+            } else if triggered == c.id() {
+                app_handle.emit("shortcut-triggered", "analyze-clipboard").ok();
+            } else if triggered == p.id() {
+                app_handle.emit("shortcut-triggered", "open-settings").ok();
+            }
+        }).build())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_fs::init())
@@ -29,6 +48,18 @@ pub fn run() {
             app.manage(models::types::AppState {
                 db_path: std::sync::Mutex::new(db_path),
             });
+
+            // Register global shortcuts
+            use tauri_plugin_global_shortcut::{GlobalShortcutExt, Shortcut};
+            let shortcut_g = "CommandOrControl+Shift+G".parse::<Shortcut>().unwrap();
+            let shortcut_s = "CommandOrControl+Shift+S".parse::<Shortcut>().unwrap();
+            let shortcut_c = "CommandOrControl+Shift+C".parse::<Shortcut>().unwrap();
+            let shortcut_p = "CommandOrControl+Shift+P".parse::<Shortcut>().unwrap();
+
+            app.global_shortcut().register(shortcut_g).ok();
+            app.global_shortcut().register(shortcut_s).ok();
+            app.global_shortcut().register(shortcut_c).ok();
+            app.global_shortcut().register(shortcut_p).ok();
 
             // Start clipboard watcher
             let handle = app_handle.clone();

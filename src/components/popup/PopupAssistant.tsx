@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import { usePopupStore, useSettingsStore } from '../../stores/appStore';
 import { ActionGrid } from './ActionGrid';
@@ -25,7 +25,6 @@ export function PopupAssistant() {
     setIsStreaming,
     setError,
     hidePopup,
-    reset,
   } = usePopupStore();
 
   const { settings } = useSettingsStore();

@@ -1,0 +1,66 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "OCRService-arm64-apple-macosx-release.module": ["<OCRService-arm64-apple-macosx-release.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<OCRService-arm64-apple-macosx-release.module>","<ocr-cli-arm64-apple-macosx-release.exe>"]
+  "ocr-cli-arm64-apple-macosx-release.exe": ["<ocr-cli-arm64-apple-macosx-release.exe>"]
+  "test": ["<OCRService-arm64-apple-macosx-release.module>","<ocr-cli-arm64-apple-macosx-release.exe>"]
+default: "main"
+nodes:
+  "/Users/shauryatiwari/GhostLens/sidecar/Sources/OCRService/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/shauryatiwari/GhostLens/sidecar/Sources/OCRService/main.swift"]
+    outputs: ["/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/sources"]
+    description: "Write auxiliary file /Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/sources"
+
+  "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/ocr-cli.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/main.swift.o"]
+    outputs: ["/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/ocr-cli.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/ocr-cli.product/Objects.LinkFileList"
+
+  "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+
+  "<OCRService-arm64-apple-macosx-release.module>":
+    tool: phony
+    inputs: ["/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/main.swift.o","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/Modules/OCRService.swiftmodule"]
+    outputs: ["<OCRService-arm64-apple-macosx-release.module>"]
+
+  "<ocr-cli-arm64-apple-macosx-release.exe>":
+    tool: phony
+    inputs: ["/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/ocr-cli"]
+    outputs: ["<ocr-cli-arm64-apple-macosx-release.exe>"]
+
+  "C.OCRService-arm64-apple-macosx-release.module":
+    tool: shell
+    inputs: ["/Users/shauryatiwari/GhostLens/sidecar/Sources/OCRService/main.swift","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/sources"]
+    outputs: ["/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/main.swift.o","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/Modules/OCRService.swiftmodule"]
+    description: "Compiling Swift Module 'OCRService' (1 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","OCRService","-emit-dependencies","-emit-module","-emit-module-path","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/Modules/OCRService.swiftmodule","-output-file-map","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/output-file-map.json","-whole-module-optimization","-num-threads","8","-c","@/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/sources","-I","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/Modules","-target","arm64-apple-macosx13.0","-whole-module-optimization","-num-threads","8","-serialize-diagnostics","-O","-j8","-DSWIFT_PACKAGE","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","OCRService_main","-swift-version","5","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","sidecar"]
+
+  "C.ocr-cli-arm64-apple-macosx-release.exe":
+    tool: shell
+    inputs: ["/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/main.swift.o","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/ocr-cli.product/Objects.LinkFileList"]
+    outputs: ["/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/ocr-cli"]
+    description: "Linking ./.build/arm64-apple-macosx/release/ocr-cli"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release","-o","/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/ocr-cli","-module-name","ocr_cli","-Xlinker","-no_warn_duplicate_libraries","-emit-executable","-Xlinker","-dead_strip","-Xlinker","-alias","-Xlinker","_OCRService_main","-Xlinker","_main","-Xlinker","-rpath","-Xlinker","@loader_path","@/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/ocr-cli.product/Objects.LinkFileList","-Xlinker","-rpath","-Xlinker","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-6.2/macosx","-target","arm64-apple-macosx13.0","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/shauryatiwari/GhostLens/sidecar/Sources/OCRService/","/Users/shauryatiwari/GhostLens/sidecar/Package.swift","/Users/shauryatiwari/GhostLens/sidecar/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

@@ -1,6 +1,5 @@
 use crate::models::types::CaptureRegion;
 use std::process::Command;
-use std::path::PathBuf;
 
 #[tauri::command]
 pub async fn capture_full_screen() -> Result<String, String> {

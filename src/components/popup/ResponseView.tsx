@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -61,7 +61,7 @@ export function ResponseView({
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              code({ className, children, ...props }) {
+              code({ className, children, ...props }: { className?: string; children?: ReactNode; [key: string]: any }) {
                 const match = /language-(\w+)/.exec(className || '');
                 const isInline = !match;
                 return isInline ? (

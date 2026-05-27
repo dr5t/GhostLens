@@ -1,0 +1,13 @@
+{
+  "": {
+    "dependencies": "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/OCRService.d",
+    "object": "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/OCRService.o",
+    "swift-dependencies": "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/primary.swiftdeps"
+  },
+  "/Users/shauryatiwari/GhostLens/sidecar/Sources/OCRService/main.swift": {
+    "object": "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/main.swift.o",
+    "swiftmodule": "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/main.swiftdeps",
+    "diagnostics": "/Users/shauryatiwari/GhostLens/sidecar/.build/arm64-apple-macosx/release/OCRService.build/main.dia"
+  }
+}

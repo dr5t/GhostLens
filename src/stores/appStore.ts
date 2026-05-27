@@ -7,7 +7,6 @@ import type {
   ClipboardEntry,
   AppSettings,
   AIProviderConfig,
-  DEFAULT_MODELS,
 } from '../types';
 
 // === Popup Store ===
@@ -37,7 +36,7 @@ interface PopupState {
   reset: () => void;
 }
 
-export const usePopupStore = create<PopupState>((set) => ({
+export const usePopupStore = create<PopupState>()((set) => ({
   isVisible: false,
   view: 'actions',
   position: { x: 100, y: 100 },
@@ -134,7 +133,7 @@ const defaultSettings: AppSettings = {
   showTrayIcon: true,
 };
 
-export const useSettingsStore = create<SettingsState>((set) => ({
+export const useSettingsStore = create<SettingsState>()((set) => ({
   settings: defaultSettings,
   isLoaded: false,
   isSettingsOpen: false,
@@ -172,7 +171,7 @@ interface ClipboardState {
   setIsMonitoring: (monitoring: boolean) => void;
 }
 
-export const useClipboardStore = create<ClipboardState>((set) => ({
+export const useClipboardStore = create<ClipboardState>()((set) => ({
   currentContent: '',
   currentType: 'text',
   history: [],
@@ -198,7 +197,7 @@ interface CaptureState {
   setLastCapturePath: (path: string | null) => void;
 }
 
-export const useCaptureStore = create<CaptureState>((set) => ({
+export const useCaptureStore = create<CaptureState>()((set) => ({
   isCapturing: false,
   selectionRegion: null,
   lastCapturePath: null,
