@@ -32,4 +32,6 @@ rusqlite = { version = "0.40.0", features = ["bundled"] }
 base64 = "0.22.1"
 uuid = { version = "1.23.1", features = ["v4"] }
 chrono = "0.4.44"
+rdev = "0.5.3"
+
 
