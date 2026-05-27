@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { PopupAssistant } from './components/popup/PopupAssistant';
 import { SettingsPanel } from './components/settings/SettingsPanel';
 import { usePopupStore, useSettingsStore, useClipboardStore } from './stores/appStore';
+import logo from './assets/logo.png';
 import {
   onShortcutTrigger,
   onGestureTrigger,
@@ -122,7 +123,7 @@ function App() {
         <div className="home-screen">
           <div className="home-content">
             <div className="home-logo">
-              <span className="home-logo-ghost">👻</span>
+              <img src={logo} alt="GhostLens Logo" className="home-logo-img" />
               <h1 className="home-title gradient-text">GhostLens</h1>
               <p className="home-subtitle">AI Screen Context Assistant</p>
             </div>

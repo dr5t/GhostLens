@@ -83,9 +83,11 @@
   gap: var(--space-2);
 }
 
-.home-logo-ghost {
-  font-size: 4rem;
-  filter: drop-shadow(0 0 20px var(--color-primary-glow));
+.home-logo-img {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 0 24px var(--color-primary-glow);
   animation: float 6s ease-in-out infinite;
 }
 
