@@ -217,9 +217,10 @@ export function SettingsPanel() {
             {activeTab === 'appearance' && (
               <div className="settings-section">
                 <div className="appearance-option">
-                  <label className="field-label">Popup Opacity</label>
+                  <label htmlFor="popup-opacity-slider" className="field-label">Popup Opacity</label>
                   <div className="slider-wrapper">
                     <input
+                      id="popup-opacity-slider"
                       type="range"
                       min="50"
                       max="100"
@@ -228,6 +229,8 @@ export function SettingsPanel() {
                         setSettings({ ...settings, popupOpacity: Number(e.target.value) })
                       }
                       className="slider"
+                      title="Popup Opacity"
+                      aria-label="Popup Opacity"
                     />
                     <span className="slider-value">{settings.popupOpacity}%</span>
                   </div>

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import { usePopupStore, useSettingsStore } from '../../stores/appStore';
-import { ActionGrid } from './ActionGrid';
-import { ResponseView } from './ResponseView';
-import { ContextBar } from './ContextBar';
+import { ActionGrid } from './ActionGrid.tsx';
+import { ResponseView } from './ResponseView.tsx';
+import { ContextBar } from './ContextBar.tsx';
 import type { AIAction } from '../../types';
 import { sendAIRequestStreaming, onStreamChunk } from '../../services/tauriService';
 import './PopupAssistant.css';
