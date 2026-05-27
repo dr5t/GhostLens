@@ -81,7 +81,7 @@ Ensure you have the following installed on your machine:
 
 #### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/GhostLens.git
+git clone https://github.com/dr5t/GhostLens.git
 cd GhostLens
 ```
 
