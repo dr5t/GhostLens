@@ -73,6 +73,40 @@ pub fn run() {
                 services::gesture::start_gesture_watcher(handle_g);
             });
 
+            // Set up System Tray Menu
+            let quit_i = tauri::menu::MenuItem::with_id(app, "quit", "Quit GhostLens", true, None::<&str>)?;
+            let show_i = tauri::menu::MenuItem::with_id(app, "show", "Show Assistant", true, None::<&str>)?;
+            let settings_i = tauri::menu::MenuItem::with_id(app, "settings", "Settings...", true, None::<&str>)?;
+            
+            let menu = tauri::menu::Menu::with_items(app, &[&show_i, &settings_i, &quit_i])?;
+
+            let _tray = tauri::tray::TrayIconBuilder::new()
+                .icon(app.default_window_icon().unwrap().clone())
+                .menu(&menu)
+                .on_menu_event(|app, event| {
+                    match event.id.as_ref() {
+                        "quit" => {
+                            app.exit(0);
+                        }
+                        "show" => {
+                            if let Some(window) = app.get_webview_window("main") {
+                                window.show().unwrap();
+                                window.set_focus().unwrap();
+                            }
+                        }
+                        "settings" => {
+                            use tauri::Emitter;
+                            app.emit("shortcut-triggered", "open-settings").ok();
+                            if let Some(window) = app.get_webview_window("main") {
+                                window.show().unwrap();
+                                window.set_focus().unwrap();
+                            }
+                        }
+                        _ => {}
+                    }
+                })
+                .build(app)?;
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
