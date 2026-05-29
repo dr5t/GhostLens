@@ -79,3 +79,37 @@ pub fn detect_content_type(content: &str) -> String {
 
     "text".to_string()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_detect_url() {
+        assert_eq!(detect_content_type("https://github.com/tauri-apps/tauri"), "url");
+        assert_eq!(detect_content_type("http://localhost:8080"), "url");
+        assert_eq!(detect_content_type("   https://example.com/test  "), "url");
+    }
+
+    #[test]
+    fn test_detect_json() {
+        assert_eq!(detect_content_type("{\"name\": \"GhostLens\", \"version\": 1.0}"), "json");
+        assert_eq!(detect_content_type("  [1, 2, 3, 4]  "), "json");
+        // Invalid json should fall back
+        assert_ne!(detect_content_type("{\"name\": }"), "json");
+    }
+
+    #[test]
+    fn test_detect_code() {
+        assert_eq!(detect_content_type("fn main() {\n    println!(\"Hello World\");\n}"), "code");
+        assert_eq!(detect_content_type("const x = 5;\nlet y = x => x * 2;"), "code");
+        assert_eq!(detect_content_type("import React from 'react';\nexport function App() {}"), "code");
+    }
+
+    #[test]
+    fn test_detect_plain_text() {
+        assert_eq!(detect_content_type("Hello world, this is a plain text sentence without indicators."), "text");
+        assert_eq!(detect_content_type("Quick brown fox jumps over the lazy dog."), "text");
+    }
+}
+

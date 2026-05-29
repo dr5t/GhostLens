@@ -24,9 +24,12 @@
 - **🔍 Smart OCR Region Capture**: Drag-to-select regions interactively on screen using macOS native tooling. Text is instantly extracted with offline Apple Vision.
 - **⚡ Streaming AI Actions**: Process captured text with high-quality presets (Explain, Summarize, Translate, Fix Grammar, Study Notes).
 - **💻 Programming Intelligence**: Detect code syntax automatically on capture, enabling syntax-highlighted code block rendering and smart actions (Explain Code, Debug, Optimize, Convert).
-- **📋 Clipboard Watcher**: Background thread monitoring system-wide clipboard updates. Detects whether content is text, URLs, JSON, or code, and parses it on command.
+- **📋 Clipboard Timeline Browser**: Background thread monitoring system-wide clipboard updates. Features a dedicated history browser panel where you can search, copy, clear, or analyze past clipboard entries.
 - **⚙️ Multi-AI Router**: Seamless settings integration for Google Gemini, OpenAI, Anthropic Claude, and local Ollama instances.
-- **🎨 Glassmorphic Desktop UI**: Premium floating panel with micro-animations, drag controls, dynamic resizing, and opacity controls.
+- **🖱️ Native Gesture Engine**: Detects triple-clicks (Left Click/Tap), triple Control taps, and rapid horizontal mouse wiggles to launch assistant operations instantly. Sensitivity and triggers are customizable in Settings.
+- **🔑 macOS Security Permissions Checklist**: A built-in guided wizard checking for macOS Accessibility (required for gesture tracking) and Screen Recording (required for region capture) permissions in real time.
+- **🌟 Smart Action Suggestions**: Dynamically detects the content type of captured text (JSON, Code, URLs, or generic text) and highlights suggested AI actions at the top of the interface.
+- **🎨 Glassmorphic Desktop UI**: Premium floating panel with micro-animations, drag controls, dynamic resizing, opacity controls, and system tray menu bar shortcuts.
 
 ---
 
@@ -37,6 +40,7 @@
                        │   React + TypeScript UI       │
                        │ ┌───────────────────────────┐ │
                        │ │   Popup Assistant Overlay │ │
+                       │ │   Clipboard Timeline Panel│ │
                        │ │   Settings Panel Modal    │ │
                        │ └───────────────────────────┘ │
                        └──────────────┬────────────────┘
@@ -48,6 +52,7 @@
                        │ │   Command Handlers        │ │
                        │ │   SQLite Memory DB        │ │
                        │ │   Clipboard Watcher Loop  │ │
+                       │ │   rdev Gesture Engine     │ │
                        │ │   AI Route Manager        │ │
                        │ └───────────────────────────┘ │
                        └──────┬─────────────────┬──────┘
@@ -59,8 +64,8 @@
                        └──────────────┘  └──────────────┘
 ```
 
-- **Frontend**: React 19, TypeScript 5, Tailwind CSS v4, Framer Motion (animations), and Zustand (state).
-- **Backend (Rust)**: Tauri 2 handles native system APIs, database persistence (SQLite via `rusqlite`), and background clipboard loops.
+- **Frontend**: React 19, TypeScript 5, Tailwind CSS, Framer Motion (animations), and Zustand (state).
+- **Backend (Rust)**: Tauri 2 handles native system APIs, database persistence (SQLite via `rusqlite`), global shortcuts, system tray creation, and background clipboard/gesture threads.
 - **Sidecar (Swift)**: A lightweight command-line utility compiled natively on macOS to communicate with Apple's Vision API for 100% offline, accurate text recognition.
 
 ---
