@@ -1,7 +1,38 @@
+.action-grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: var(--space-1);
+}
+
+.action-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.action-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
 .action-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-2);
+}
+
+.action-grid.suggested {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .action-btn {
@@ -16,6 +47,17 @@
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
+  min-height: 72px;
+}
+
+.action-btn.suggested-btn {
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  background: rgba(124, 58, 237, 0.04);
+}
+
+.action-btn.suggested-btn:hover {
+  border-color: var(--color-primary-light);
+  background: rgba(124, 58, 237, 0.08);
 }
 
 .action-btn::before {
@@ -53,6 +95,22 @@
 
 .action-btn:hover .action-label {
   color: var(--color-text-primary);
+}
+
+.suggestion-pill {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 7px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Focus state */

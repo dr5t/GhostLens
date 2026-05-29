@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 /// Global app state managed by Tauri
 pub struct AppState {
     pub db_path: Mutex<PathBuf>,
+    pub settings: std::sync::RwLock<AppSettings>,
 }
 
 /// AI Provider enum

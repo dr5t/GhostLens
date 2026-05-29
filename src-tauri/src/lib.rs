@@ -44,9 +44,19 @@ pub fn run() {
             // Initialize database
             services::memory::init_db(&db_path).expect("Failed to initialize database");
 
-            // Store db path in app state
+            // Load settings
+            let settings_json = services::memory::get_setting(&db_path, "app_settings")
+                .unwrap_or(None);
+            let settings: models::types::AppSettings = if let Some(json_str) = settings_json {
+                serde_json::from_str(&json_str).unwrap_or_default()
+            } else {
+                Default::default()
+            };
+
+            // Store db path and settings in app state
             app.manage(models::types::AppState {
                 db_path: std::sync::Mutex::new(db_path),
+                settings: std::sync::RwLock::new(settings),
             });
 
             // Register global shortcuts
@@ -80,8 +90,8 @@ pub fn run() {
             
             let menu = tauri::menu::Menu::with_items(app, &[&show_i, &settings_i, &quit_i])?;
 
-            let _tray = tauri::tray::TrayIconBuilder::new()
-                .icon(app.default_window_icon().unwrap().clone())
+            let tray_icon = app.default_window_icon().cloned();
+            let mut tray_builder = tauri::tray::TrayIconBuilder::new()
                 .menu(&menu)
                 .on_menu_event(|app, event| {
                     match event.id.as_ref() {
@@ -104,8 +114,13 @@ pub fn run() {
                         }
                         _ => {}
                     }
-                })
-                .build(app)?;
+                });
+
+            if let Some(icon) = tray_icon {
+                tray_builder = tray_builder.icon(icon);
+            }
+
+            let _tray = tray_builder.build(app)?;
 
             Ok(())
         })
@@ -121,6 +136,11 @@ pub fn run() {
             commands::screen_capture::capture_interactive,
             commands::clipboard::get_clipboard_content,
             commands::utils::read_file_base64,
+            commands::permissions::check_accessibility_permission,
+            commands::permissions::open_accessibility_settings,
+            commands::permissions::check_screen_recording_permission,
+            commands::permissions::request_screen_recording_permission,
+            commands::permissions::start_gesture_recognition,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

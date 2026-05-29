@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { PopupAssistant } from './components/popup/PopupAssistant';
 import { SettingsPanel } from './components/settings/SettingsPanel';
+import { PermissionChecklist } from './components/settings/PermissionChecklist';
 import { usePopupStore, useSettingsStore, useClipboardStore } from './stores/appStore';
 import logo from './assets/logo.png';
 import {
@@ -11,12 +12,31 @@ import {
   performOCR,
   getClipboardContent,
   onClipboardChange,
+  checkAccessibilityPermission,
+  checkScreenRecordingPermission,
 } from './services/tauriService';
 import './App.css';
 
 function App() {
   const { showPopup, isVisible, setCapturedImage } = usePopupStore();
   const { setSettings, openSettings, isSettingsOpen } = useSettingsStore();
+  const [permissionsGranted, setPermissionsGranted] = useState<boolean | null>(null);
+
+  // Check permissions periodically
+  useEffect(() => {
+    const checkAll = async () => {
+      try {
+        const acc = await checkAccessibilityPermission();
+        const scr = await checkScreenRecordingPermission();
+        setPermissionsGranted(acc && scr);
+      } catch {
+        setPermissionsGranted(false);
+      }
+    };
+    checkAll();
+    const timer = setInterval(checkAll, 2000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Load settings on startup
   useEffect(() => {
@@ -141,41 +161,52 @@ function App() {
               <p className="home-subtitle">AI Screen Context Assistant</p>
             </div>
 
-            <div className="home-shortcuts">
-              <div className="shortcut-item">
-                <kbd>⌘⇧G</kbd>
-                <span>Open Assistant</span>
+            {permissionsGranted === false ? (
+              <div className="home-onboarding">
+                <PermissionChecklist
+                  showContinueButton={true}
+                  onContinue={() => setPermissionsGranted(true)}
+                />
               </div>
-              <div className="shortcut-item">
-                <kbd>⌘⇧S</kbd>
-                <span>Screenshot & Analyze</span>
-              </div>
-              <div className="shortcut-item">
-                <kbd>⌘⇧C</kbd>
-                <span>Analyze Clipboard</span>
-              </div>
-              <div className="shortcut-item">
-                <kbd>Triple Ctrl</kbd>
-                <span>Quick Trigger</span>
-              </div>
-            </div>
+            ) : (
+              <>
+                <div className="home-shortcuts">
+                  <div className="shortcut-item">
+                    <kbd>⌘⇧G</kbd>
+                    <span>Open Assistant</span>
+                  </div>
+                  <div className="shortcut-item">
+                    <kbd>⌘⇧S</kbd>
+                    <span>Screenshot & Analyze</span>
+                  </div>
+                  <div className="shortcut-item">
+                    <kbd>⌘⇧C</kbd>
+                    <span>Analyze Clipboard</span>
+                  </div>
+                  <div className="shortcut-item">
+                    <kbd>Triple Ctrl</kbd>
+                    <span>Quick Trigger</span>
+                  </div>
+                </div>
 
-            <div className="home-actions">
-              <button
-                className="home-btn primary"
-                onClick={() => showPopup('Hello! I am GhostLens, your AI screen assistant. Select some text on screen or take a screenshot to get started.')}
-              >
-                <span>✨</span> Try It Now
-              </button>
-              <button className="home-btn secondary" onClick={openSettings}>
-                <span>⚙️</span> Settings
-              </button>
-            </div>
+                <div className="home-actions">
+                  <button
+                    className="home-btn primary"
+                    onClick={() => showPopup('Hello! I am GhostLens, your AI screen assistant. Select some text on screen or take a screenshot to get started.')}
+                  >
+                    <span>✨</span> Try It Now
+                  </button>
+                  <button className="home-btn secondary" onClick={openSettings}>
+                    <span>⚙️</span> Settings
+                  </button>
+                </div>
 
-            <div className="home-status">
-              <div className="status-dot active" />
-              <span>Ready — Listening for shortcuts</span>
-            </div>
+                <div className="home-status">
+                  <div className="status-dot active" />
+                  <span>Ready — Listening for shortcuts</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

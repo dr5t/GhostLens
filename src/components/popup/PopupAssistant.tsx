@@ -4,6 +4,7 @@ import { usePopupStore, useSettingsStore } from '../../stores/appStore';
 import { ActionGrid } from './ActionGrid.tsx';
 import { ResponseView } from './ResponseView.tsx';
 import { ContextBar } from './ContextBar.tsx';
+import { ClipboardPanel } from '../clipboard/ClipboardPanel.tsx';
 import logo from '../../assets/logo.png';
 import type { AIAction } from '../../types';
 import { sendAIRequestStreaming, onStreamChunk } from '../../services/tauriService';
@@ -36,7 +37,7 @@ export function PopupAssistant() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (view === 'response') {
+        if (view === 'response' || view === 'clipboard') {
           setView('actions');
           setResponseText('');
           setAction(null);
@@ -137,11 +138,20 @@ export function PopupAssistant() {
               </div>
             </div>
             <div className="popup-header-right no-drag">
-              {view === 'response' && (
+              {view === 'actions' && (
+                <button
+                  className="popup-nav-btn"
+                  onClick={() => setView('clipboard')}
+                  title="View clipboard history (Esc to close)"
+                >
+                  📋
+                </button>
+              )}
+              {(view === 'response' || view === 'clipboard') && (
                 <button
                   className="popup-nav-btn"
                   onClick={handleBack}
-                  title="Back to actions"
+                  title="Back to actions (Esc)"
                 >
                   ←
                 </button>
@@ -170,7 +180,7 @@ export function PopupAssistant() {
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <ActionGrid onAction={handleAction} />
+                  <ActionGrid onAction={handleAction} capturedText={capturedText} />
                 </motion.div>
               )}
 
@@ -189,6 +199,18 @@ export function PopupAssistant() {
                     error={error}
                     onRetry={() => currentAction && handleAction(currentAction)}
                   />
+                </motion.div>
+              )}
+
+              {view === 'clipboard' && (
+                <motion.div
+                  key="clipboard"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ClipboardPanel />
                 </motion.div>
               )}
             </AnimatePresence>

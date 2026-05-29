@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSettingsStore } from '../../stores/appStore';
 import { saveSettings, validateApiKey } from '../../services/tauriService';
 import type { AIProvider, AIProviderConfig } from '../../types';
+import { PermissionChecklist } from './PermissionChecklist';
 import './SettingsPanel.css';
 
-type SettingsTab = 'providers' | 'shortcuts' | 'appearance' | 'general';
+type SettingsTab = 'providers' | 'shortcuts' | 'appearance' | 'general' | 'permissions';
 
 const PROVIDER_INFO: Record<AIProvider, { name: string; icon: string; placeholder: string }> = {
   gemini: { name: 'Google Gemini', icon: '✨', placeholder: 'AIza...' },
@@ -48,6 +49,7 @@ export function SettingsPanel() {
     { id: 'shortcuts', label: 'Shortcuts', icon: '⌨️' },
     { id: 'appearance', label: 'Appearance', icon: '🎨' },
     { id: 'general', label: 'General', icon: '⚙️' },
+    { id: 'permissions', label: 'Permissions', icon: '🔒' },
   ];
 
   return (
@@ -273,6 +275,12 @@ export function SettingsPanel() {
                     {settings.gesturesEnabled ? 'ON' : 'OFF'}
                   </button>
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'permissions' && (
+              <div className="settings-section">
+                <PermissionChecklist />
               </div>
             )}
           </div>

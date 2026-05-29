@@ -119,3 +119,25 @@ export async function onShortcutTrigger(
 export async function readFileAsBase64(filePath: string): Promise<string> {
   return invoke<string>('read_file_base64', { filePath });
 }
+
+// === Permissions ===
+export async function checkAccessibilityPermission(): Promise<boolean> {
+  return invoke<boolean>('check_accessibility_permission');
+}
+
+export async function openAccessibilitySettings(): Promise<void> {
+  return invoke<void>('open_accessibility_settings');
+}
+
+export async function checkScreenRecordingPermission(): Promise<boolean> {
+  return invoke<boolean>('check_screen_recording_permission');
+}
+
+export async function requestScreenRecordingPermission(): Promise<boolean> {
+  return invoke<boolean>('request_screen_recording_permission');
+}
+
+export async function startGestureRecognition(): Promise<void> {
+  return invoke<void>('start_gesture_recognition');
+}
+

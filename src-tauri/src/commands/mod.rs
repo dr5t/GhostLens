@@ -4,3 +4,4 @@ pub mod ocr;
 pub mod screen_capture;
 pub mod clipboard;
 pub mod utils;
+pub mod permissions;

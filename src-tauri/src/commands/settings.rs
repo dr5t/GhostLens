@@ -26,6 +26,12 @@ pub async fn save_settings(
     let db_path = state.db_path.lock().unwrap().clone();
     let json_str = serde_json::to_string(&settings).map_err(|e| e.to_string())?;
     memory::set_setting(&db_path, "app_settings", &json_str).map_err(|e| e.to_string())?;
+    
+    // Update cached settings in app state
+    if let Ok(mut cached) = state.settings.write() {
+        *cached = settings;
+    }
+    
     Ok(())
 }
 
